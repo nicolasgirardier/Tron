@@ -1,2 +1,2 @@
 # Tron
-Bastien - Juliette - Chloé - Nicolas
+Bastien - Juliette - Cloé - Nicolas
