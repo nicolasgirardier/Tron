@@ -21,6 +21,15 @@
     ]
   },
   "dependencies": {
+    "mongodb": "^4.12.1",
     "websocket": "^1.0.34"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicolasgirardier/Tron.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nicolasgirardier/Tron/issues"
+  },
+  "homepage": "https://github.com/nicolasgirardier/Tron#readme"
 }

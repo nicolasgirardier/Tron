@@ -9,6 +9,10 @@ const wsServer = new WebSocketServer({
  httpServer: server
 });
 
+const conn = new Mongo();
+db = conn.getDB("tronDB");
+db = connect("localhost:27020/tronDB");
+
 // Mise en place des événements WebSockets
 wsServer.on('request', function(request) {
     console.log("Requête reçue")
@@ -22,7 +26,6 @@ wsServer.on('request', function(request) {
         connection.sendUTF('Hi this is WebSocket server!');
      });
      connection.on('close', function(reasonCode, description) {
-        
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
      });
 });
