@@ -1,12 +1,7 @@
 
-document.addEventListener('deviceready', onDeviceReady, false);
 
-function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
-    //test
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
-}
+let connected_status=false
+let pseudo;
 
 const ws = new WebSocket('ws://localhost:9898/');
 
@@ -17,9 +12,33 @@ ws.onopen = function(e){
 }
 
 ws.onmessage = function(event) {
-    alert(event.data);
+    console.log(event.data)
+    let data = JSON.parse(event.data)
+    if(data.type=="connection"){
+        receiveConnectionValidated(data)
+    }
   }
 
 function sendMessage(){
     ws.send("Salut j'envoie un mess");
+}
+
+function validateInscription(){
+    let pseudo = document.getElementById("pseudo").value;
+    let passwd = document.getElementById("passwd").value;
+    var tab = { "pseudo" : pseudo,
+        "password" : passwd}
+
+    varTabJSON = JSON.stringify(tab)
+    ws.send(varTabJSON);
+}
+
+function receiveConnectionValidated(data){
+    if(data.status == true){
+        document.getElementById("connection").style.display="none"
+
+        pseudo=data.pseudo
+        document.getElementById("loginConnected").innerHTML+=pseudo
+        document.getElementById("loginConnected").style.display="block"
+    }
 }

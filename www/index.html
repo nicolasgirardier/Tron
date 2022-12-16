@@ -38,8 +38,18 @@
     </head>
     <body>
         <div class="app">
-            <h1>Apache Cordova</h1>
-            <button id="buttonMessage" onclick="sendMessage()">Envoyez un message au serveur !</button>
+            <h1>Tron</h1>
+            <h1 id="loginConnected">Connecté en tant que :</h1>
+
+            <div id="connection">
+                <label for="fname">Pseudo :</label>
+                <input type="text" id="pseudo" name="pseudon"><br><br>
+                <label for="lname">Password :</label>
+                <input type="text" id="passwd" name="pwd"><br><br>         
+    
+                <button id="authentifactionButton" onclick="validateInscription()">Authentifiez vous !</button>
+            </div>
+           
         </div>
         <script src="cordova.js"></script>
         <script src="js/index.js"></script>
