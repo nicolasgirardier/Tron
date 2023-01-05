@@ -1,0 +1,15 @@
+#grid {
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);    /* à retirer */
+    grid-template-columns: repeat(10, 1fr); /* à retirer */
+    width: -moz-fit-content;
+    width: fit-content;
+    
+}
+
+#grid div {
+    width: 30px;
+    height: 30px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 1px 0px, rgba(60, 64, 67, 0.15) 0px 1px 1px 0px;
+    border-radius: 1px;
+}

@@ -25,19 +25,30 @@ wsServer.on('request', function(request) {
          if(typeof(message)== "JSON");{
             
             var connectionStatusMessage;
-            let account = connections.find(element => element.pseudo == message.utf8Data.pseudo)
+            const mess = JSON.parse(message.utf8Data)
+            let account = connections.find(element => element.pseudo == mess.pseudo)
             if(account == undefined){
-               connections.push(message.utf8Data)
+               connections.push(mess)
+               console.log(connections[0])
+               connectionStatusMessage={ "type" : "connection",
+                  "status" : true, "pseudo" : mess.pseudo}
+                  connectionStatusMessage = JSON.stringify(connectionStatusMessage)
+
+               connection.send(connectionStatusMessage)
+               console.log("pseudo encore inconnu se connecte")
                //connection.sendUTF("pseudo encore inconnu")
             }
             else {
-
-               if(message.utf8Data.password == account.password){
+               console.log("tentative de connexion sur un compte déja connu")
+               if(mess.password == account.password){
                   connectionStatusMessage={ "type" : "connection",
-                  "status" : true, "pseudo" : message.utf8Data.pseudo}
+                  "status" : true, "pseudo" : mess.pseudo}
                   connectionStatusMessage = JSON.stringify(connectionStatusMessage)
                   
                   connection.send(connectionStatusMessage)
+               }
+               else{
+                  console.log("Mot de passe erroné pour " + mess.pseudo)
                }
             }
 

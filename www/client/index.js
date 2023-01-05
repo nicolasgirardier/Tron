@@ -19,23 +19,26 @@ ws.onmessage = function(event) {
     }
   }
 
-function sendMessage(){
-    ws.send("Salut j'envoie un mess");
+function sendMessage(obj){
+    ws.send(obj);
 }
 
 function validateInscription(){
-    let pseudo = document.getElementById("pseudo").value;
+    let pseud = document.getElementById("pseudo").value;
     let passwd = document.getElementById("passwd").value;
-    var tab = { "pseudo" : pseudo,
-        "password" : passwd}
+    
+    /*var JsonTab = {};
+    JsonTab.pseudo = pseudo;
+    JsonTab.password = passwd;*/
+    const tab = { pseudo : pseud,
+        password : passwd};
 
-    varTabJSON = JSON.stringify(tab)
-    ws.send(varTabJSON);
+    ws.send(JSON.stringify(tab));
 }
 
 function receiveConnectionValidated(data){
     if(data.status == true){
-        document.getElementById("connection").style.display="none"
+        document.getElementById("connectionForm").style.display="none"
 
         pseudo=data.pseudo
         document.getElementById("loginConnected").innerHTML+=pseudo
