@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="base+.css">
     <link rel="stylesheet" href="../css/index.css">
-    <title>Grid</title>
+    <title>TRON</title>
 </head>
 <body>
     <script src="cordova.js"></script>
@@ -15,22 +15,24 @@
     <div class="app">
 
         <!-- La vue de connexion -->
-        <div id="connection">
-            <h1>Tron</h1>
-            <h1 id="loginConnected">Connecté en tant que :</h1>
+        <div class="connection" id="connection">
+            <h1><span id="T">T</span><span id="R">R</span><span id="O">O</span><span id="N">N</span><h1>
+            <h1 id="loginConnected">Connected as</h1>
     
             <div id="connectionForm">
-                <label for="fname">Pseudo :</label>
-                <input type="text" id="pseudo" name="pseudon"><br><br>
-                <label for="lname">Password :</label>
+                <label id="labelConnectionForm" for="fname">Pseudo</label><br>
+                <input type="text" id="pseudo" name="pseudo"><br><br>
+                <label id="labelConnectionForm" for="lname">Password</label><br>
                 <input type="text" id="passwd" name="pwd"><br><br>         
     
-                <button id="authentifactionButton" onclick="validateInscription()">Authentifiez vous !</button>
+                <button id="authentifactionButton" onclick="validateInscription()">Connection</button>
             </div>
         </div>
     
         <!-- La vue d'attente dans le hub -->
-        <div id="waiting"></div>
+        <div id="waiting">
+            <h1 id="waiting">En attente d'autres joueurs</h1>
+        </div>
     
         <!-- La vue de jeu  -->
         <div id="grid"></div>

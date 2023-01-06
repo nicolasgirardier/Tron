@@ -9,8 +9,8 @@ function repaintDivAccordingToOwner(div, owner) {
 }
 
 function showView(view) {
-    connectionDOM.style.display = view == "CONNECTION" ? "block" : "none";
-    waitingDOM.style.display = view == "WAITING" ? "block" : "none";
-    gridDOM.style.display = view == "GRID" ? "block" : "none";
-    endingDOM.style.display = view == "ENDING" ? "block" : "none";
+    connectionDOM.style.display = view == "CONNECTION" ? "flex" : "none";
+    waitingDOM.style.display = view == "WAITING" ? "flex" : "none";
+    gridDOM.style.display = view == "GRID" ? "flex" : "none";
+    endingDOM.style.display = view == "ENDING" ? "flex" : "none";
 }

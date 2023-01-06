@@ -42,6 +42,5 @@ function receiveConnectionValidated(data){
 
         pseudo=data.pseudo
         document.getElementById("loginConnected").innerHTML+=pseudo
-        document.getElementById("loginConnected").style.display="block"
     }
 }

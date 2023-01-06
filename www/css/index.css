@@ -1,17 +1,101 @@
 
 
 h1 {
-    font-size:24px;
-    font-weight:normal;
-    margin:0px;
+    font-size: 100px;
+    font-family: fantasy;
+    font-style: italic;
+    margin: 10px;
     overflow:visible;
-    padding:0px;
-    text-align:center;
+    animation: 1s linear 0s infinite alternate a;
 }
 
-#connection {
-    display: none;
+@keyframes a {
+    from {
+        transform: scale(.8);
+    }
+    to {
+        transform: scale(1.1);
+    }
 }
+
+#T  {
+    animation-duration: .5s;
+    animation-name: clignoterT;
+    animation-iteration-count: infinite;
+}
+
+#R  {
+    animation-duration: .5s;
+    animation-name: clignoterR;
+    animation-iteration-count: infinite;
+}
+
+#O  {
+    animation-duration: .5s;
+    animation-name: clignoterO;
+    animation-iteration-count: infinite;
+}
+
+#N  {
+    animation-duration: .5s;
+    animation-name: clignoterN;
+    animation-iteration-count: infinite;
+}
+
+ @keyframes clignoterT {
+    0%  {color:lightskyblue;}
+    20% {color:rgb(120, 173, 219);}
+    40% {color:rgb(97, 179, 242);}
+    60% {color:rgb(43, 80, 226);}
+    80% {color:blue;}
+    100%{ color:rgb(65, 19, 235);}
+  }
+
+  @keyframes clignoterR {
+    20%  {color:lightskyblue;}
+    40% {color:rgb(120, 173, 219);}
+    60% {color:rgb(97, 179, 242);}
+    80% {color:rgb(43, 80, 226);}
+    100% {color:blue;}
+    0%{ color:rgb(65, 19, 235);}
+  }
+
+  @keyframes clignoterO {
+    40%  {color:lightskyblue;}
+    60% {color:rgb(120, 173, 219);}
+    80% {color:rgb(97, 179, 242);}
+    100% {color:rgb(43, 80, 226);}
+    0% {color:blue;}
+    20%{ color:rgb(65, 19, 235);}
+  }
+
+  @keyframes clignoterN {
+    60%  {color:lightskyblue;}
+    80% {color:rgb(120, 173, 219);}
+    100% {color:rgb(97, 179, 242);}
+    0% {color:rgb(43, 80, 226);}
+    20% {color:blue;}
+    40%{ color:rgb(65, 19, 235);}
+  }
+
+
+.connection {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1ch;
+}
+
+#connectionForm {
+    padding: 40px;
+    background: lavender;
+    box-shadow: 7px 10px 25px 5px navajowhite;
+}
+
+#labelConnectionForm {
+    font-family: 'Courier New', Courier, monospace;
+}
+
 #loginConnected {
     display: none;
 }
