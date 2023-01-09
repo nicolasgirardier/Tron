@@ -12,11 +12,12 @@ ws.onopen = function(e){
 }
 
 ws.onmessage = function(event) {
-    console.log(event.data)
-    let data = JSON.parse(event.data)
-    if(data.type=="connection"){
+    let data = JSON.parse(event.data);
+
+    getJsonFromServer(data);
+    /*if(data.type=="connection"){
         receiveConnectionValidated(data)
-    }
+    }*/
   }
 
 function sendMessage(obj){

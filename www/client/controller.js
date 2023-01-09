@@ -27,8 +27,9 @@ function getJsonFromServer(jsonObj) {
     /**
      * Si la Game a commencé.
      */
+    console.log(jsonObj["hasStarted"])
     if (jsonObj["hasStarted"]) {
-
+        console.log("la game a commencé !")
         /**
          * Si la grid n'a jamais été dessinée, on la dessine.
          * Sinon, on s'occupe simplement de repeindre l'ancienne.
@@ -51,7 +52,6 @@ function getJsonFromServer(jsonObj) {
      * Si la Game n'a pas encore commencé.
      */
     else {
-
         model.show("WAITING");
         drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["motos"]);
     }

@@ -51,9 +51,10 @@ function updateGames() {
     })
 }
 
+setInterval(updateGames, 200);
 
 
-// TEST
+/*// TEST
 joueurConnecte("bastien")
 joueurConnecte("cloé")
 joueurConnecte("juliette")
@@ -74,4 +75,4 @@ myGame.update();
 myGame.update();
 myGame.update();
 myGame.update();
-myGame.update();
+myGame.update();*/

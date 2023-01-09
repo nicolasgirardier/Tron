@@ -1,0 +1,500 @@
+/**
+ * Configurations du jeu.
+ */
+class Config {
+    /**
+     * Largeur de la grille.
+     */
+    static GRID_WIDTH = 10;
+
+    /**
+     * Hauteur de la grille.
+     */
+    static GRID_HEIGHT = 10;
+
+    /**
+     * Nombre de joueurs requis.
+     */
+    static NB_REQUIRED_PLAYERS = 4;
+
+    /**
+     * Coordonnées de départ d'un joueur.
+     */
+    static PLAYER_STARTING_COORDS = [
+        [1, 1],
+        [Config.GRID_WIDTH - 1, Config.GRID_HEIGHT - 1],
+        [Config.GRID_WIDTH - 1, 1],
+        [1, Config.GRID_HEIGHT - 1],
+    ];
+
+    /**
+     * Score ajouté pour avoir fait 1 mouvement.
+     */
+    static SCORE_BONUS_FOR_MOVE = 1;
+
+    /**
+     * Score ajouté pour avoir fait 1 kill.
+     */
+    static SCORE_BONUS_FOR_KILL = 100;
+
+    /**
+     * Score ajouté pour avoir gagné 1 partie.
+     */
+    static SCORE_BONUS_FOR_WIN = 1000;
+}
+
+/**
+ * Décrit une direction pour une moto. Elle est constituée de 4 attributs.
+ * Un seul peut être évalué à true. Au départ, ils sont tous évalués à false.
+ */
+class DirectionMoto {
+    constructor() {
+        this.reset();
+    }
+
+    /**
+     * Reset la direction.
+     */
+    reset() {
+        this.LEFT = false;
+        this.RIGHT = false;
+        this.UP = false;
+        this.DOWN = false;
+    }
+
+    /**
+     * Ré-évalue tous les attributs en fonction de la direction choisie. Une direction
+     * est déterminée comme suit :
+     * - Si la direction choisie n'est pas opposée à celle en cours, alors la direction est la direction choisie.
+     * - Si la direction choisie est opposée à celle en cours, alors la direction reste celle en cours.
+     * @param {String} key String indiquant la direction "LEFT", "RIGHT", "UP", "DOWN"
+     */
+    changeTo(key) {
+        this.LEFT = (key == "LEFT" && !this.RIGHT) || (key == "RIGHT" && this.LEFT);
+        this.RIGHT = (key == "RIGHT" && !this.LEFT) || (key == "LEFT" && this.RIGHT);
+        this.UP = (key == "UP" && !this.DOWN) || (key == "DOWN" && this.UP);
+        this.DOWN = (key == "DOWN" && !this.UP) || (key == "UP" && this.DOWN);
+    }
+
+    /**
+     * @returns String indiquant la direction actuelle de la moto.
+     */
+    get() {
+        if (this.LEFT)
+            return "LEFT";
+        if (this.RIGHT)
+            return "RIGHT";
+        if (this.UP)
+            return "UP";
+        if (this.DOWN)
+            return "DOWN";
+        return "START";
+    }
+}
+
+/**
+ * Décrit une cellule de la grille.
+ */
+class Cell {
+    /**
+     * À l'initialisation, la Cell n'a pas d'owner.
+     * @param {Integer} x Coordonnée x de la Cell.
+     * @param {Integer} y Coordonnée y de la Cell.
+     * @param {Moto} owner La moto présente sur cette Cell.
+     */
+    constructor(x, y, owner = null) {
+        this.x = x;
+        this.y = y;
+        this.owner = owner;
+    }
+
+    /**
+     * Indique si la Cell a un propriétaire.
+     * @returns true si la Cell a un owner, false sinon.
+     */
+    hasOwner() {
+        return this.owner != null;
+    }
+
+    /**
+     * Définit le propriétaire de cette Cell.
+     * @param {Moto} moto La moto qui devient owner de cette Cell.
+     */
+    setOwner(moto) {
+        if (this.owner != null)
+            throw "Impossible d'attribuer cette Cell à une moto, elle appartient déjà à une autre.";
+        this.owner = moto;
+    }
+
+    /**
+     * Redéfinit cette Cell comme n'ayant pas de propriétaire.
+     */
+    resetOwner() {
+        this.owner = null;
+    }
+}
+
+/**
+ * Une moto jouée par un joueur.
+ */
+class Moto {
+    /**
+     * @param {String} idPlayer L'id du joueur qui joue cette moto.
+     * @param {Cell} startCell La Cell de départ de la moto.
+     * @param {String} color La couleur utilisée pour dessiner la moto.
+     */
+    constructor(idPlayer, name, startCell, color) {
+        this.idPlayer = idPlayer;
+        this.name = name;
+
+        this.move(startCell);
+        this.direction = new Direction();
+
+        this.color = color;
+        this.isDead = false;
+        this.score = 0;
+    }
+
+    /**
+     * Déplace cette moto sur la Cell en paramètre. Doit être différente
+     * de null. Met à jour le score pour avoir effectué un déplacement.
+     * @param {Cell} cell La nouvelle position de la moto.
+     */
+    move(cell) {
+        this.head = cell;
+        cell.setOwner(this);
+        this.incrementScore(Config.SCORE_BONUS_FOR_MOVE);
+    }
+
+    /**
+     * Cette moto a perdu.
+     */
+    lost() {
+        this.head.resetOwner();
+        this.head = null;
+        this.isDead = true;
+        this.direction.reset();
+        //TODO: mettre à jour la bdd
+    }
+
+    /**
+     * Incrémente le score de la moto.
+     * @param {Number} incr Valeur d'incrémentation du score de cette moto.
+     */
+    incrementScore(incr) {
+        this.score += incr;
+    }
+}
+
+/**
+ * Constitue la Grille de jeu, composée d'objets Cell.
+ */
+class Grid {
+    constructor(width, height) {
+        this.width = width;
+        this.height = height;
+        this.cells = [];
+        for (let i = 0; i < height; i++)
+            for (let j = 0; j < width; j++)
+                this.cells.push(new Cell(j, i));
+    }
+
+    /**
+     * Retourne l'objet Cell aux coordonnées précisées en paramètres. Si aucune
+     * Cell n'est présente à ces coordonnées, renvoie undefined.
+     * @param {Integer} x Coordonnée x de la Cell.
+     * @param {Integer} y Coordonnée y de la Cell.
+     * @returns La Cell aux coordonnées (x, y).
+     */
+    getCell(x, y) {
+        return this.cells.filter(cell => {return cell.x == x && cell.y == y})[0];
+    }
+
+    /**
+     * Sachant une Cell et une Direction, retourne la Cell adjacente correspondante.
+     * @param {Cell} cell La Cell
+     * @param {Direction} direction La direction.
+     * @returns La Cell adjacente.
+     */
+    getAdjacentCell(cell, direction) {
+        switch (direction) {
+            case "UP": return (cell.y > 0) ? this.getCell(cell.x, cell.y - 1) : null;
+            case "DOWN": return (cell.y < Config.GRID_HEIGHT) ? this.getCell(cell.x, cell.y + 1) : null;
+            case "LEFT": return (cell.x > 0) ? this.getCell(cell.x - 1, cell.y) : null;
+            case "RIGHT": return (cell.x < Config.GRID_WIDTH) ? this.getCell(cell.x + 1, cell.y) : null;
+            default: throw "Invalid direction";
+        }
+    }
+}
+
+/**
+ * Décrit l'état du jeu.
+ */
+class Game {
+    constructor() {
+        /**
+         * Indique si la Game a commencé.
+         */
+        this.hasStarted = false;
+
+        /**
+         * Indique si la Game a finie.
+         */
+        this.hasFinished = false;
+
+        /**
+         * Indique si la Game doit être retirée de la liste des Game en cours.
+         */
+        this.toRemove = false;
+
+        this.nbPlayers = 0;
+        this.requestedNbPlayers = Config.NB_REQUIRED_PLAYERS;
+
+        this.grid = new Grid(Config.GRID_WIDTH, Config.GRID_HEIGHT);
+        this.motos = [];
+    }
+
+    /**
+     * Ajoute un joueur à cette Game. Si la Game atteint le nombre de joueur requis,
+     * elle change d'état pour ne plus accepter de nouveaux joueurs et commencer la
+     * partie. Un joueur ne peut se connecter à la game que si celle-ci est dans l'état
+     * "waiting".
+     * @param {String} idPlayer L'id du joueur.
+     */
+    playerConnects(idPlayer) {
+        this.nbPlayers++;
+
+        let newMoto = new Moto(idPlayer, idPlayer, this.getCellStart(), this.getRandomColor());
+        this.motos.push(newMoto);
+
+        if (this.nbPlayers == this.requestedNbPlayers)
+            this.hasStarted = true;
+    }
+
+    /**
+     * Retire un joueur de la Game. Pour cela, il faut mettre à jour l'attribut de la
+     * moto qu'il jouait. Les actions sont différentes selon l'état actuel de la Game. 
+     * - Si la Game a commencé, il faut faire perdre le joueur puis mettre l'idJoueur
+     * de sa moto à null (cela traduit le fait que plus aucun joueur ne joue cette moto.)
+     * - Si la Game a terminé, il faut juste mettre l'idJoueur de sa moto à null.
+     * - Si la Game n'a pas encore commencé, il faut retirer toute la moto du jeu.
+     * Dans tous les cas, on décrémente le nombre de joueurs connectés.
+     * @param {String} idPlayer L'id du joueur.
+     */
+    playerDisconnects(idPlayer) {
+        /**
+         * On cherche la moto associée à cet idJoueur.
+         */
+        const moto = this.motos.find(moto => { return moto.idPlayer == idPlayer });
+        if (moto == undefined)
+            throw "Aucune moto avec le joueurId " + idPlayer + " n'a été trouvée.";
+
+        this.nbPlayers--;
+        if (this.hasStarted) {
+            /**
+             * Alors que le jeu est en cours.
+             */
+            if (!moto.isDead)
+                this.removeMotoFromGrid(moto, null);
+            moto.idPlayer = null;
+        } else if (this.hasFinished) {
+            /**
+             * Dans l'ending room.
+             */
+            if (this.nbPlayers == 0) {
+                this.hasFinished = false;
+                this.toRemove = true;
+            }
+            moto.idPlayer = null;
+        } else {
+            /**
+             * Dans la waiting room.
+             */
+            moto.lost();
+            this.motos = this.motos.filter(m => { return m.idPlayer != idPlayer });
+        }
+    }
+
+    /**
+     * Met à jour l'état du jeu.
+     */
+    update() {
+        let jsonToSend = new Object();
+        jsonToSend["hasStarted"] = this.hasStarted;
+        jsonToSend["hasFinished"] = this.hasFinished;
+
+        if (this.hasStarted) {
+            /**
+             * On update le jeu en déplaçant les motos non mortes.
+             */
+            this.motos.filter(m => { return !m.isDead }).forEach(moto => {
+                let dir = moto.direction.get();
+                if (dir != "START") {
+                    /**
+                     * La moto se déplace sur une des 4 cases adjacentes en fonction de sa
+                     * direction.
+                     */
+                    let newCell = this.grid.getAdjacentCell(moto.head, dir);
+                    /**
+                     * Si la nouvelle Cell est hors du cadre (== null) ou si elle appartient
+                     * déjà à une moto (que ce soit sa propre propriétaire ou non), alors la
+                     * moto a perdu.
+                     */
+                    if (newCell == null || (newCell != null && newCell.owner != null)) {
+                        this.removeMotoFromGrid(moto, newCell);
+                    } else {
+                        moto.move(newCell);
+                    }
+                }
+            });
+            jsonToSend["grid"] = this.grid;
+        } else if (this.hasFinished) {
+            /**
+             * On check le nombre de joueurs restants.
+             */
+            if (this.nbPlayers == 0)
+                this.toRemove = true;
+            else
+                jsonToSend["motos"] = this.motos;
+        } else {
+            jsonToSend["players"] = this.nbPlayers;
+            jsonToSend["requestedNbPlayers"] = this.requestedNbPlayers;
+            jsonToSend["motos"] = this.motos;
+        }
+        this.sendUpdateToClients(jsonToSend);
+    }
+
+    /////////////////////////////COMMUNICATION////CLIENT////////////////////////////////
+    /**
+     * Envoie un objet à tous les clients connectés à cette Game.
+     * @param {Object} obj Les data à envoyer aux clients.
+     */
+    sendUpdateToClients(obj) {
+        const motosWithClient = this.motos.filter(m => { return m.idPlayer != null });
+        if (motosWithClient.length > 0) {
+            motosWithClient.forEach(moto => {
+                //TODO: Send 'obj' to moto.idPlayer.
+            });
+        }
+    }
+
+    /**
+     * Serveur reçoit un contrôle de l'utilisateur. Après cela, on vérifie que le
+     * client a toujours une moto jouable en jeu.
+     * @param {String} idPlayer L'id du client qui envoie au serveur son nouveau
+     * contrôle de direction.
+     * @param {String} controlKey UP|DOWN|LEFT|RIGHT
+     */
+    getControlFromClient(idPlayer, controlKey) {
+        const moto = this.motos.find(moto => { return moto.idPlayer == idPlayer });
+        if (moto != undefined && !moto.isDead)
+            moto.direction.changeTo(controlKey);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Retire la Moto du plateau et met à jour les scores. Le score va dépendre
+     * de si la moto s'est suicidée dans sa propre trainée ou bien s'il s'agit
+     * d'une autre moto qui l'a détruite.
+     * @param {Moto} moto La moto à retirer.
+     * @param {Cell} cellImpact La cellule où a eu lieu l'impact
+     */
+    removeMotoFromGrid(moto, cellImpact) {
+        moto.lost();
+        if (cellImpact != null && cellImpact.owner != moto)
+            cellImpact.owner.incrementScore(Config.SCORE_BONUS_FOR_KILL);
+        this.grid.cells.forEach(cell => { if (cell.owner == moto) cell.resetOwner(); });
+        let survivors = this.motos.filter(m => { return !m.isDead });
+        if (survivors.length == 1)
+            survivors[0].incrementScore(Config.SCORE_BONUS_FOR_WIN);
+        if (survivors.length <= 1)
+            this.gameFinished();
+    }
+
+    /**
+     * La game est finie.
+     */
+    gameFinished() {
+        //TODO: Mettre à jour les scores et le temps de jeu dans la BDD.
+        //TODO: Mettre à jour les highest scores des joueurs si nécessaire.
+        this.hasStarted = false;
+        this.hasFinished = true;
+    }
+
+    /**
+     * @returns Retourne une cellule de départ qui n'a pas déjà été attribuée.
+     */
+    getCellStart() {
+        for (let i = 0; i < Config.PLAYER_STARTING_COORDS.length; i++) {
+            const coords = Config.PLAYER_STARTING_COORDS[i];
+            const cell = this.grid.getCell(coords[0], coords[1]);
+            if (!cell.hasOwner())
+                return cell;
+        }
+        throw "N'a pas pu récupérer une Cell à attribuer."
+    }
+
+    /**
+     * @returns Un String représentant une couleur choisie aléatoirement.
+     */
+    getRandomColor() {
+        const colMax = 16777215;
+        return "#" + Math.floor(Math.random() * colMax).toString(16).padStart(6, '0').toUpperCase();
+    }
+}
+
+/**
+ * gameWaiting et gamesPlaying contiennent des objets Games.
+ * gameWaiting est la Game en attente de joueurs. Il ne peut y en avoir 
+ * qu'une.
+ * gamesPlaying est l'array des Game en cours.
+ */
+let gameWaiting = null;
+const gamesPlaying = [];
+
+function joueurConnecte(idPlayer) {
+    //TODO: met à jour la BDD.
+    
+    /**
+     * Si une game est en attente de joueurs (gameWaiting != null), on fait
+     * se connecter le joueur à cette Game.
+     */
+    if (gameWaiting != null) {
+        gameWaiting.playerConnects(idPlayer);
+        /**
+         * Si à présent la Game a le nombre de joueurs requis, elle passe dans
+         * la liste des games en cours (gamesPlaying). Et gameWaiting redevient
+         * null.
+         */
+        if (gameWaiting.hasStarted) {
+            gamesPlaying.push(gameWaiting);
+            gameWaiting = null;
+        }
+    }
+
+    /**
+     * Si aucune Game n'attend de joueurs (gameWaiting == null), on en créé
+     * une nouvelle.
+     */
+    else {
+        gameWaiting = new Game();
+        gameWaiting.playerConnects(idPlayer);
+    }
+}
+
+/**
+ * On met à jour toutes les games.
+ */
+function updateGames() {
+    console.log("on mets à jours les games");
+    if (gameWaiting != null)
+        gameWaiting.update();
+    gamesPlaying.forEach((game, index) => {
+        if (game.toRemove)
+            gamesPlaying.splice(index, 1);
+        else
+            game.update();
+    })
+}
+
+setInterval(updateGames, 200);
