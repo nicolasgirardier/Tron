@@ -285,7 +285,7 @@ class Game {
      * @param {Player} player L'id du joueur.
      */
     playerDisconnects(player) {
-        const moto = this.motos.find(m => { return m.player.id == player.id });
+        const moto = this.motos.find(m => { return m.player != null ? m.player.id == player.id : false });
         if (moto == undefined)
             throw "Aucune moto avec le joueurId " + player.id + " n'a été trouvée.";
 
@@ -326,7 +326,6 @@ class Game {
         let jsonToSend = new Object();
         jsonToSend["hasStarted"] = this.hasStarted;
         jsonToSend["hasFinished"] = this.hasFinished;
-
 
         if (this.hasStarted) {
             /**
@@ -540,7 +539,6 @@ const wsServer = new WebSocketServer({
     httpServer: server
 });
 
-var connections = [];
 // Mise en place des événements WebSockets
 wsServer.on('request', function (request) {
     console.log("Requête reçue")
@@ -553,20 +551,21 @@ wsServer.on('request', function (request) {
     connection.on('message', function (message) {
 
         const json = JSON.parse(message.utf8Data);
+        let id = json.object.id;
 
         // Si le client essaye de se connecter
         if (json.status == "connection") {
-            //let account = connections.find(element => element.pseudo == mess.pseudo);
-            connections.push(json);
-            joueurConnecte(json.object, connection)
+
+            joueurConnecte(id, connection);
+
         }
         else if (json.status == "sendControl") {
-            let id = json.object.id;
+            
             let key = json.object.key;
             let game, moto;
             for (let i = 0; i < gamesPlaying.length; i++) {
                 game = gamesPlaying[i];
-                moto = game.motos.find(m => { return m.player.id == id });
+                moto = game.motos.find(m => { return m.player != null ? m.player.id == id : false });
                 if (moto != undefined)
                     break;
             }
@@ -574,8 +573,16 @@ wsServer.on('request', function (request) {
             game.getControlFromClient(moto, key);
 
         }
-        else if (json.status == "replay") {
+        else if (json.status == "disconnects") {
+            let game, moto;
+            for (let i = 0; i < gamesPlaying.length; i++) {
+                game = gamesPlaying[i];
+                moto = game.motos.find(m => { return m.player != null ? m.player.id == id : false });
+                if (moto != undefined)
+                    break;
+            }
 
+            game.playerDisconnects(moto.player);
         }
         /*
         if (typeof (message) == "JSON"); {

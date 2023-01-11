@@ -22,4 +22,9 @@ function repaintGrid(grid) {
         repaintDiv(div, cell.col);
     });
 }
+
+function clearGrid() {
+    while (gridDOM.lastElementChild)
+        gridDOM.removeChild(gridDOM.lastElementChild);
+}
 ////////////////////////////////////////////////////

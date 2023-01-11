@@ -14,11 +14,22 @@ function sendMessage(obj, stat) {
  */
 function jouerJeu() {
     const idPlayer = document.getElementById("pseudo").value;
-    /**
-     * TODO: vérifier que idPlayer est pas déjà connecté.
-     */
     model.setIdPlayer(idPlayer);
-    sendMessage(idPlayer, "connection");
+    let obj = {
+        id: model.idPlayer,
+    }
+    sendMessage(obj, "connection");
+}
+
+function quitterJeu() {
+    model.gridDrawn = false;
+    model.show("CONNECTION");
+    clearGrid();
+    drawConnectionPage();
+    let obj = {
+        id: model.idPlayer,
+    }
+    sendMessage(obj, "disconnects");
 }
 
 /**
