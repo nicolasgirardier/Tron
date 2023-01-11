@@ -1,4 +1,9 @@
 ////////////////////GRID////VIEW////////////////////
+function repaintDiv(div, col) {
+    if (col != null)
+        div.style.backgroundColor = col;
+}
+
 function drawGrid(grid) {
     showView("GRID");
     gridDOM.style.gridTemplateRows = "repeat(" + grid.height + ", 1fr)";
@@ -6,14 +11,15 @@ function drawGrid(grid) {
 
     grid.cells.forEach(cell => {
         const div = document.createElement("div");
-        repaintDivAccordingToOwner(div, cell.owner);
+        gridDOM.appendChild(div);
+        repaintDiv(div, cell.col);
     });
 }
 
 function repaintGrid(grid) {
     grid.cells.forEach((cell, index) => {
         const div = gridDOM.children[index];
-        repaintDivAccordingToOwner(div, cell.owner);
+        repaintDiv(div, cell.col);
     });
 }
 ////////////////////////////////////////////////////

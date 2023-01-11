@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="base+.css">
+    <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="../css/index.css">
     <title>Grid</title>
 </head>
@@ -17,7 +17,7 @@
         <!-- La vue de connexion -->
         <div id="connection">
             <h1>Tron</h1>
-            <h1 id="loginConnected">Connecté en tant que :</h1>
+            <!--<h1 id="loginConnected">Connecté en tant que :</h1> -->
     
             <div id="connectionForm">
                 <label for="fname">Pseudo :</label>
@@ -25,7 +25,7 @@
                 <label for="lname">Password :</label>
                 <input type="text" id="passwd" name="pwd"><br><br>         
     
-                <button id="authentifactionButton" onclick="validateInscription()">Authentifiez vous !</button>
+                <button id="authentifactionButton" onclick="jouerJeu()">Authentifiez vous !</button>
             </div>
         </div>
     
@@ -38,14 +38,16 @@
         <div id="grid"></div>
     
         <!-- La vue de partie terminée -->
-        <div id="ending"></div>
+        <div id="ending">
+            <h1>Game terminée ! A+ les trouducs</h1>
+        </div>
 
     </div>
     
     
     <!-- scripts -->
     <script src="cordova.js"></script>
-    <script src="index.js"></script>
+      
     <script src="model.js"></script>
 
     <script src="views/view.js"></script>
@@ -55,5 +57,6 @@
     <script src="views/viewEnding.js"></script>
 
     <script src="controller.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>

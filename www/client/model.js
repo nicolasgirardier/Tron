@@ -4,7 +4,7 @@
  */
 class Model {
     constructor() {
-        this.idJoueur = null;
+        this.idPlayer = null;
 
         this.connectionView = false;
         this.waitingView = false;
@@ -14,8 +14,8 @@ class Model {
         this.gridDrawn = false;
     }
 
-    setIdJoueur(idJoueur) {
-        this.idJoueur = idJoueur;
+    setIdPlayer(idPlayer) {
+        this.idPlayer = idPlayer;
     }
 
     show(view) {

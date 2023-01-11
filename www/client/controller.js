@@ -1,20 +1,37 @@
 /**
+ * Quand client envoie du JSON au serveur
+ */
+function sendMessage(obj, stat) {
+    const msg = {
+        status: stat,
+        object: obj,
+    };
+    ws.send(JSON.stringify(msg));
+}
+
+/**
  * Le client clique sur "jouer au jeu" pour rejoindre une partie.
  */
 function jouerJeu() {
-    const idJoueur = "Dominique"; //TODO: Récupérer l'id de l'input du client.
-    model.setIdJoueur(idJoueur);
-    //TODO: annonce au serveur que Dominique vient jouer.
+    const idPlayer = document.getElementById("pseudo").value;
+    /**
+     * TODO: vérifier que idPlayer est pas déjà connecté.
+     */
+    model.setIdPlayer(idPlayer);
+    sendMessage(idPlayer, "connection");
 }
 
 /**
  * Expected input :  ArrowUp|ArrowDown|ArrowLeft|ArrowRight
- * Expected output :    UP  |   DOWN  |  LEFT   |  RIGHT
+ * Expected change :    UP  |   DOWN  |  LEFT   |  RIGHT
  * @param {String} key Le représentation textuelle de la touche d'input.
  */
 function sendControlToServer(key) {
-    return key.substring(5).toUpperCase();
-    //TODO: envoyer ce contrôle au serveur.
+    let obj = {
+        id: model.idPlayer,
+        key: key.substring(5).toUpperCase(),
+    }
+    sendMessage(obj, "sendControl");
 }
 
 /**
@@ -24,34 +41,20 @@ function sendControlToServer(key) {
  * @param {Object} jsonObj Un objet JSON provenant du serveur.
  */
 function getJsonFromServer(jsonObj) {
-    /**
-     * Si la Game a commencé.
-     */
-    console.log(jsonObj["hasStarted"])
     if (jsonObj["hasStarted"]) {
-        console.log("la game a commencé !")
-        /**
-         * Si la grid n'a jamais été dessinée, on la dessine.
-         * Sinon, on s'occupe simplement de repeindre l'ancienne.
-         */
         model.show("GRID");
-        if (!model.drawGridOnce())
+        if (!model.drawGridOnce()) {
+            console.log("Je dessine la grille pour la première fois");
             drawGrid(jsonObj["grid"]);
-        else
+        }
+        else {
+            console.log("Je redessine la grille");
             repaintGrid(jsonObj["grid"]);
-    } else 
-    /**
-     * Si la Game s'est terminée.
-     */
-    if (jsonObj["hasFinished"]) {
-
+        }
+    } else if (jsonObj["hasFinished"]) {
         model.show("ENDING");
         drawEndingRoom(jsonObj["motos"]);
-    }
-    /**
-     * Si la Game n'a pas encore commencé.
-     */
-    else {
+    } else {
         model.show("WAITING");
         drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["motos"]);
     }
@@ -63,13 +66,15 @@ function getJsonFromServer(jsonObj) {
  * @param {KeyEvent} e L'évènement clavier.
  * @returns Envoie un contrôle au serveur.
  */
-gridDOM.onkeydown = function (e) {
-    switch (e.key) {
-        case "ArrowUp":
-        case "ArrowDown":
-        case "ArrowLeft":
-        case "ArrowRight":
-            return sendControlToServer(e.key);
+document.onkeydown = function (e) {
+    if (model.gridView) {
+        switch (e.key) {
+            case "ArrowUp":
+            case "ArrowDown":
+            case "ArrowLeft":
+            case "ArrowRight":
+                return sendControlToServer(e.key);
+        }
     }
 }
 
