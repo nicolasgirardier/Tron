@@ -365,7 +365,7 @@ class Game {
             if (this.nbPlayers == 0)
                 this.toRemove = true;
             //else
-                //jsonToSend["motos"] = this.motos;
+            //jsonToSend["motos"] = this.motos;
         } else {
             /**
              * Tant que la game est en attente, on envoie avec le JSON des données comme le nombre
@@ -529,6 +529,7 @@ setInterval(updateGames, 500);
 
 ///////////////////// LE SERVEUR ////////////////////////////
 const http = require('http');
+const { MongoClient } = require('mongodb');
 const server = http.createServer();
 server.listen(9898); // On écoute sur le port 9898
 
@@ -539,10 +540,16 @@ const wsServer = new WebSocketServer({
     httpServer: server
 });
 
+/*const client = new MongoClient('mongodb://localhost:27017');
+const db = client.db('Tron');
+const collection = db.collection('players');
+const result = collection.insertOne("A");*/
+
+
+let ids = [];
 // Mise en place des événements WebSockets
 wsServer.on('request', function (request) {
     console.log("Requête reçue")
-
 
     const connection = request.accept(null, request.origin);
 
@@ -552,84 +559,59 @@ wsServer.on('request', function (request) {
 
         const json = JSON.parse(message.utf8Data);
         let id = json.object.id;
+        connection.id = id;
 
         // Si le client essaye de se connecter
         if (json.status == "connection") {
-
-            joueurConnecte(id, connection);
-
-        }
-        else if (json.status == "sendControl") {
-            
-            let key = json.object.key;
-            let game, moto;
-            for (let i = 0; i < gamesPlaying.length; i++) {
-                game = gamesPlaying[i];
-                moto = game.motos.find(m => { return m.player != null ? m.player.id == id : false });
-                if (moto != undefined)
-                    break;
+            if (!ids.includes(connection.id)) {
+                ids.push(id);
+                joueurConnecte(id, connection);
             }
-            
-            game.getControlFromClient(moto, key);
+        } else {
+            let gamemoto = getGameMoto(id);
+            let game = gamemoto[0];
+            let moto = gamemoto[1];
 
-        }
-        else if (json.status == "disconnects") {
-            let game, moto;
-            for (let i = 0; i < gamesPlaying.length; i++) {
-                game = gamesPlaying[i];
-                moto = game.motos.find(m => { return m.player != null ? m.player.id == id : false });
-                if (moto != undefined)
-                    break;
+            if (json.status == "sendControl") {
+                let key = json.object.key;
+                game.getControlFromClient(moto, key);
+            } 
+            else if (json.status == "disconnects") {
+                game.playerDisconnects(moto.player);
+                removeConnection(connection);
             }
+        }
 
-            game.playerDisconnects(moto.player);
-        }
-        /*
-        if (typeof (message) == "JSON"); {
-  
-           var connectionStatusMessage;
-           const mess = JSON.parse(message.utf8Data);
-           
-              connections.push(mess);
-              console.log(connections[connections.length]-1);
-              connectionStatusMessage = {
-                 "type": "connection",
-                 "status": true, "pseudo": mess.pseudo
-              }
-              connectionStatusMessage = JSON.stringify(connectionStatusMessage)
-  
-              connection.send(connectionStatusMessage)
-              console.log("pseudo encore inconnu se connecte")
-              //connection.sendUTF("pseudo encore inconnu")
-  
-              joueurConnecte(mess.pseudo, connection)
-           }
-           else {
-              console.log("tentative de connexion sur un compte déja connu")
-              if (mess.password == account.password) {
-                 connectionStatusMessage = {
-                    "type": "connection",
-                    "status": true, "pseudo": mess.pseudo
-                 }
-                 connectionStatusMessage = JSON.stringify(connectionStatusMessage)
-  
-                 connection.send(connectionStatusMessage)
-              }
-              else {
-                 console.log("Mot de passe erroné pour " + mess.pseudo)
-              }
-           }
-  
-  
-           //connection.sendUTF("connected : true");
-           //connection.sendUTF('Hi this is WebSocket server ! You are now connected');
-           //console.log(connections[1].pseudo);
-        }
-        */
 
     });
+    
     connection.on('close', function (reasonCode, description) {
+        let gamemoto = getGameMoto(connection.id);
+        let game = gamemoto[0];
+        let moto = gamemoto[1];
+        game.playerDisconnects(moto.player);
 
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
+        removeConnection(connection);
+        console.log((new Date()) + ' Peer ' + connection.id + ' disconnected.')
     });
 });
+
+function removeConnection(connection) {
+    if (connection.id != null) {
+        const index = ids.indexOf(connection.id);
+        if (index != -1)
+            ids.splice(index, 1);
+    }
+    console.log("current connections -> " + ids);
+}
+
+function getGameMoto(id) {
+    let game, moto;
+    for (let i = 0; i < gamesPlaying.length; i++) {
+        game = gamesPlaying[i];
+        moto = game.motos.find(m => { return m.player != null ? m.player.id == id : false });
+        if (moto != undefined)
+            break;
+    }
+    return [game, moto];
+}

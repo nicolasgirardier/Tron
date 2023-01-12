@@ -21,6 +21,7 @@
     ]
   },
   "dependencies": {
+    "mongodb": "^4.13.0",
     "websocket": "^1.0.34"
   }
 }
