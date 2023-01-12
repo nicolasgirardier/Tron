@@ -33,10 +33,17 @@
     
         <!-- La vue d'attente dans le hub -->
         <div id="waiting">
-            <h1 id="tron" style="max-width: fit-content; margin-inline-start: 45%;"><span id="T">T</span><span
-                    id="R">R</span><span id="O">O</span><span id="N">N</span></h1>
-            <h2 id="waitingTitle">waiting for other players to join<span id="point1">. </span><span id="point2">.
-                </span><span id="point3">. </span></h2>
+            <h1 id="tron">
+                <span id="T">T</span>
+                <span id="R">R</span>
+                <span id="O">O</span>
+                <span id="N">N</span>
+            <h1>
+            <h2 id="waitingTitle">waiting for other players to join
+                <span id="point1">. </span>
+                <span id="point2">.</span>
+                <span id="point3">. </span>
+            </h2>
         </div>
     
         <!-- La vue de jeu  -->
@@ -48,26 +55,10 @@
             <div id="content">
                 <h2 id="endingTitle">GAME IS OVER</h2>
                 <table id="scoreBoard">
-                    <tr>
+                    <thead>
                         <th>Players</th>
                         <th>Scores</th>
-                    </tr>
-                    <tr>
-                        <td>juliette</td>
-                        <td>1000</td>
-                    </tr>
-                    <tr>
-                        <td>pastien</td>
-                        <td>2848</td>
-                    </tr>
-                    <tr>
-                        <td>pics</td>
-                        <td>50</td>
-                    </tr>
-                    <tr>
-                        <td>cloé</td>
-                        <td>145</td>
-                    </tr>
+                    </thead>
                 </table>
                 <button class="bouton" onclick="quitterJeu()">Deconnection</button>
             </div>
