@@ -541,7 +541,7 @@ function updateGames() {
     })
 }
 
-setInterval(updateGames, 500);
+setInterval(updateGames, 200);
 
 
 ///////////////////// LE SERVEUR ////////////////////////////
@@ -590,7 +590,10 @@ wsServer.on('request', function (request) {
                 ids.push(id);
                 joueurConnecte(id, connection);
             } else {
-                
+                let obj = {
+                    invalidConnection: true,
+                };
+                connection.send(JSON.stringify(obj));
             }
         } else {
             let gamemoto = getGameMoto(id);
