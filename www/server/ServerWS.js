@@ -572,7 +572,7 @@ const result = collection.insertOne("A");*/
 let ids = [];
 // Mise en place des événements WebSockets
 wsServer.on('request', function (request) {
-    console.log("Requête reçue")
+    console.log("Requête reçue");
 
     const connection = request.accept(null, request.origin);
 
