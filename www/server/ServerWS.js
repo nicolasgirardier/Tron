@@ -589,6 +589,8 @@ wsServer.on('request', function (request) {
             if (!ids.includes(connection.id)) {
                 ids.push(id);
                 joueurConnecte(id, connection);
+            } else {
+                
             }
         } else {
             let gamemoto = getGameMoto(id);

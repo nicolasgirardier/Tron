@@ -52,6 +52,9 @@ function sendControlToServer(key) {
  * @param {Object} jsonObj Un objet JSON provenant du serveur.
  */
 function getJsonFromServer(jsonObj) {
+    if (jsonObj["invalidConnection"]) {
+        alert("This name is being used right now, please choose an other one.");
+    }
     if (jsonObj["hasStarted"]) {
         model.show("GRID");
         if (!model.drawGridOnce()) {
