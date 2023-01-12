@@ -150,6 +150,7 @@ class Moto {
      */
     constructor(player, startCell, color) {
         this.player = player;
+        this.name = player.id;
 
         this.color = color;
         this.isDead = false;
@@ -364,17 +365,33 @@ class Game {
              */
             if (this.nbPlayers == 0)
                 this.toRemove = true;
-            //else
-            //jsonToSend["motos"] = this.motos;
+            else {
+                let names = [], cols = [], scores = [];
+                this.motos.forEach(m => {
+                    names.push(m.name);
+                    cols.push(m.color);
+                    scores.push(m.score);
+                })
+                jsonToSend["names"] = names;
+                jsonToSend["cols"] = cols;
+                jsonToSend["scores"] = scores;
+            }
+                
         } else {
             /**
              * Tant que la game est en attente, on envoie avec le JSON des données comme le nombre
              * de joueurs connectés sur le nombre de joueurs requis, ainsi que les noms des joueurs
              * déjà connectés et leur couleur.
              */
-            jsonToSend["players"] = this.nbPlayers;
-            jsonToSend["requestedNbPlayers"] = this.requestedNbPlayers;
-            //jsonToSend["motos"] = this.motos;
+            let names = [], cols = [];
+                this.motos.forEach(m => {
+                    names.push(m.name);
+                    cols.push(m.color);
+                })
+                jsonToSend["players"] = this.nbPlayers;
+                jsonToSend["requestedNbPlayers"] = this.requestedNbPlayers;
+                jsonToSend["names"] = names;
+                jsonToSend["cols"] = cols;
         }
 
         /**
@@ -545,11 +562,11 @@ const collection = db.collection('players');
 const result = collection.insertOne("A");*/
 
 // Si erreur quand vous exécutez le serveur, commentez les lignes qui suivent
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://Nikoto:2470NicolasG@cluster0.e5ssyqv.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect();
-const collection = client.db("Tron").collection("Players");
+// const { MongoClient, ServerApiVersion } = require('mongodb');
+// const uri = "mongodb+srv://Nikoto:2470NicolasG@cluster0.e5ssyqv.mongodb.net/?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+// client.connect();
+// const collection = client.db("Tron").collection("Players");
 //collection.insertOne({ idPlayer: "A"}) exemple d'insertion dans la collection "Players"
 
 let ids = [];
@@ -602,6 +619,10 @@ wsServer.on('request', function (request) {
     });
 });
 
+/**
+ * Retire l'id contenu dans la connection de la liste d'ids.
+ * @param {String} connection L'id du joueur qui dispose de la connection.
+ */
 function removeConnection(connection) {
     if (connection.id != null) {
         const index = ids.indexOf(connection.id);
@@ -611,6 +632,11 @@ function removeConnection(connection) {
     console.log("current connections -> " + ids);
 }
 
+/**
+ * Get la game et la moto du joueur en paramètre s'il en a.
+ * @param {String} id L'id du joueur
+ * @returns Array d'une game et d'une moto.
+ */
 function getGameMoto(id) {
     let game, moto;
     for (let i = 0; i < gamesPlaying.length; i++) {

@@ -64,10 +64,10 @@ function getJsonFromServer(jsonObj) {
         }
     } else if (jsonObj["hasFinished"]) {
         model.show("ENDING");
-        drawEndingRoom(jsonObj["motos"]);
+        drawEndingRoom(jsonObj["names"], jsonObj["cols"], jsonObj["scores"]);
     } else {
         model.show("WAITING");
-        drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["motos"]);
+        drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["names"], jsonObj["cols"]);
     }
 }
 

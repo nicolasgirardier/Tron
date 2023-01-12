@@ -1,5 +1,5 @@
 ///////////////////ENDING////VIEW///////////////////
-function drawEndingRoom(motos) {
+function drawEndingRoom(names, cols, scores) {
     showView("ENDING");
 }
 ////////////////////////////////////////////////////

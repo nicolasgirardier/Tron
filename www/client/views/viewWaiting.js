@@ -1,5 +1,5 @@
 ///////////////////WAITING////VIEW//////////////////
-function drawWaitingRoom(players, requestedNbPlayers, motos) {
+function drawWaitingRoom(players, requestedNbPlayers, names, cols) {
     showView("WAITING");
 }
 ////////////////////////////////////////////////////
