@@ -541,7 +541,7 @@ function updateGames() {
     })
 }
 
-setInterval(updateGames, 500);
+setInterval(updateGames, 100);
 
 
 ///////////////////// LE SERVEUR ////////////////////////////
@@ -572,7 +572,7 @@ const result = collection.insertOne("A");*/
 let ids = [];
 // Mise en place des événements WebSockets
 wsServer.on('request', function (request) {
-    console.log("Requête reçue")
+    console.log("Requête reçue");
 
     const connection = request.accept(null, request.origin);
 
@@ -589,8 +589,11 @@ wsServer.on('request', function (request) {
             if (!ids.includes(connection.id)) {
                 ids.push(id);
                 joueurConnecte(id, connection);
-            } else {
-                
+            }  else {
+                let obj = {
+                    invalidConnection: true,
+                };
+                connection.send(JSON.stringify(obj));
             }
         } else {
             let gamemoto = getGameMoto(id);
