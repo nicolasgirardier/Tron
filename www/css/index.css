@@ -163,6 +163,36 @@ body {
     99% {transform: scale(.8);}
 }
 
+    /*-----------------------ENDING------------------------*/
+#content {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+#endingTitle {
+    display: flex;
+    align-self: center;
+    font-size: medium;
+    font-size: 50px;
+    font-family: 'Bahnschrift';
+    font-weight:normal;
+    color: lightblue;
+}
+
+#scoreBoard {
+    display: flex;
+    align-self: center;
+    width: fit-content;
+    color: white;
+    font-family: 'Bahnschrift';
+    background-color: rgb(167, 213, 229,.5);
+}
+
+tbody {
+    border-spacing: 17px;
+}
+
 
 
 
