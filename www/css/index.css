@@ -1,3 +1,7 @@
+body {
+    background-image:url('https://i.gifer.com/Cj4Q.gif');
+    background-size: cover;
+}
 
 
 h1 {
@@ -6,10 +10,10 @@ h1 {
     font-style: italic;
     margin: 10px;
     overflow:visible;
-    animation: 1s linear 0s infinite alternate a;
+    animation: 1s linear 0s infinite alternate zoom;
 }
 
-@keyframes a {
+@keyframes zoom {
     from {
         transform: scale(.8);
     }
@@ -88,13 +92,33 @@ h1 {
 
 #connectionForm {
     padding: 40px;
-    background: lavender;
-    box-shadow: 7px 10px 25px 5px navajowhite;
+    background: lightblue;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    animation: 1s linear infinite alternate neonBackground;
 }
 
-#labelConnectionForm {
-    font-family: 'Courier New', Courier, monospace;
+@keyframes neonBackground {
+    0%  {box-shadow:0px 0px 20px 5px lightblue;}
+    25% {box-shadow:0px 0px 20px 4px lightblue;}
+    80% {box-shadow:0px 0px 20px 6px lightblue;}
+    100%{box-shadow:0px 0px 20px 3px lightblue;}
+  }
+
+  #labelConnectionForm {
+    font-family: 'Bahnschrift SemiBold', monospace;
+    color:rgb(7, 7, 79);
 }
+
+#authentifactionButton {
+    padding: 8px;
+    font-family: 'Bahnschrift';
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+    background-color: rgb(7, 7, 79);
+    cursor: pointer;}
 
 #loginConnected {
     display: none;
