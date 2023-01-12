@@ -529,7 +529,6 @@ setInterval(updateGames, 500);
 
 ///////////////////// LE SERVEUR ////////////////////////////
 const http = require('http');
-const { MongoClient } = require('mongodb');
 const server = http.createServer();
 server.listen(9898); // On écoute sur le port 9898
 
@@ -545,6 +544,13 @@ const db = client.db('Tron');
 const collection = db.collection('players');
 const result = collection.insertOne("A");*/
 
+// Si erreur quand vous exécutez le serveur, commentez les lignes qui suivent
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://Nikoto:2470NicolasG@cluster0.e5ssyqv.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+client.connect();
+const collection = client.db("Tron").collection("Players");
+//collection.insertOne({ idPlayer: "A"}) exemple d'insertion dans la collection "Players"
 
 let ids = [];
 // Mise en place des événements WebSockets
