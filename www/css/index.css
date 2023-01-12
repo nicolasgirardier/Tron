@@ -3,8 +3,10 @@ body {
     background-size: cover;
 }
 
-
-h1 {
+#tron {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     font-size: 100px;
     font-family: fantasy;
     font-style: italic;
@@ -83,6 +85,9 @@ h1 {
   }
 
 
+
+      /*-----------------------CONNECTION------------------------*/
+
 .connection {
     justify-content: center;
     flex-direction: column;
@@ -119,6 +124,48 @@ h1 {
     color: white;
     background-color: rgb(7, 7, 79);
     cursor: pointer;}
+
+
+    /*-----------------------WAITING------------------------*/
+#waiting{
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 1ch;
+}
+
+#waitingTitle { 
+    color: white;    
+    font-size: 100px;
+    font-family: fantasy;
+    font-style: italic;
+    margin: 10px;
+}
+
+#point1 {
+    animation: 1s linear 0s infinite alternate moveDot1;
+}
+@keyframes moveDot1 {
+    33%  {transform: scale(.8);}
+}
+
+#point2 {
+    animation: 1s linear 0s infinite moveDot2;
+}
+@keyframes moveDot2 {
+    66%  {transform: scale(.8);}
+}
+
+#point3 {
+    animation: 1s linear 0s infinite moveDot3;
+}
+@keyframes moveDot3 {
+    99% {transform: scale(.8);}
+}
+
+
+
+
 
 #loginConnected {
     display: none;

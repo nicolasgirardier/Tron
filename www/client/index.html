@@ -14,31 +14,34 @@
 
     <div class="app">
 
-        <!-- La vue de connexion -->
+       <!-- La vue de connexion -->
         <div class="connection" id="connection">
-            <h1><span id="T">T</span><span id="R">R</span><span id="O">O</span><span id="N">N</span><h1>
+            <h1 id="tron"><span id="T">T</span><span id="R">R</span><span id="O">O</span><span id="N">N</span><h1>
             <h1 id="loginConnected">Connected as</h1>
     
             <div id="connectionForm">
                 <label id="labelConnectionForm" for="fname">Pseudo</label>
                 <input type="text" id="pseudo" name="pseudo"><br>
-                <label id="labelConnectionForm" for="lname">Password</label>
-                <input type="text" id="passwd" name="pwd"><br><br>
     
                 <button id="authentifactionButton" onclick="validateInscription()">PLAY</button>
             </div>
-        </div>
+        </div> 
     
         <!-- La vue d'attente dans le hub -->
         <div id="waiting">
-            <h1 id="waiting">En attente d'autres joueurs</h1>
+            <h1 id="tron" style="max-width: fit-content; margin-inline-start: 45%;"><span id="T">T</span><span id="R">R</span><span id="O">O</span><span id="N">N</span></h1>
+            <h2 id="waitingTitle">waiting for other players to join<span id="point1">. </span><span id="point2">. </span><span id="point3">. </span></h2>
         </div>
     
         <!-- La vue de jeu  -->
         <div id="grid"></div>
     
         <!-- La vue de partie terminée -->
-        <div id="ending"></div>
+        <div id="ending">
+            <h1 id="tron" style="max-width: fit-content; margin-inline-start: 45%;"><span id="T">T</span><span id="R">R</span><span id="O">O</span><span id="N">N</span></h1>
+            <h2 id="waitingTitle">GAME IS OVER</h2>
+        </div>
+        </div>
 
     </div>
     
