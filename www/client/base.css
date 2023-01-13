@@ -2,6 +2,8 @@
     display: grid;
     width: -moz-fit-content;
     width: fit-content;
+    border: 1px solid white;
+    background-color: black;
 }
 
 #grid div {
@@ -9,4 +11,5 @@
     height: 15px;
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 1px 0px, rgba(60, 64, 67, 0.15) 0px 1px 1px 0px;
     border-radius: 1px;
+    border: 0.5px solid white;
 }

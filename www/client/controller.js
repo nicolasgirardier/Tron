@@ -52,6 +52,7 @@ function sendControlToServer(key) {
  * @param {Object} jsonObj Un objet JSON provenant du serveur.
  */
 function getJsonFromServer(jsonObj) {
+    console.log(jsonObj);
     if (jsonObj["invalidConnection"])
         return alert("This name is being used right now, please choose an other one.");
         
@@ -67,11 +68,8 @@ function getJsonFromServer(jsonObj) {
         }
     } else if (jsonObj["hasFinished"]) {
         model.show("ENDING");
-        if(!model.createScoreBoardOnce()) {
-            console.log("Je crée la table pour la première fois");
-            emptyScoreBoard();
-            drawEndingRoom(jsonObj["names"], jsonObj["cols"], jsonObj["scores"]);
-        }
+        emptyScoreBoard();
+        drawEndingRoom(jsonObj["names"], jsonObj["cols"], jsonObj["scores"]);
     } else {
         model.show("WAITING");
         drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["names"], jsonObj["cols"]);
