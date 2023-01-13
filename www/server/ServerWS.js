@@ -15,7 +15,7 @@ class Config {
     /**
      * Nombre de joueurs requis.
      */
-    static NB_REQUIRED_PLAYERS = 2;
+    static NB_REQUIRED_PLAYERS = 4;
 
     /**
      * Coordonnées de départ d'un joueur.
