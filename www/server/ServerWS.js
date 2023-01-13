@@ -382,6 +382,7 @@ class Game {
                 jsonToSend["scores"] = scores;
                 this.sendUpdateToClients(jsonToSend);
                 this.requestUpdate = false;
+                return;
             }
                 
         } else {
