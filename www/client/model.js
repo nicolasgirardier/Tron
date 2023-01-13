@@ -13,6 +13,8 @@ class Model {
 
         this.gridDrawn = false;
         this.scoreBoardCreated = false;
+        this.playersTableCreated = false;
+
     }
 
     setIdPlayer(idPlayer) {
@@ -35,6 +37,12 @@ class Model {
     createScoreBoardOnce() {
         let res = this.scoreBoardCreated;
         this.scoreBoardCreated = true;
+        return res;
+    }
+
+    createPlayersTableOnce() {
+        let res = this.playersTableCreated;
+        this.playersTableCreated = true;
         return res;
     }
 }

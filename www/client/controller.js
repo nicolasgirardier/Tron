@@ -74,7 +74,8 @@ function getJsonFromServer(jsonObj) {
         }
     } else {
         model.show("WAITING");
-        drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["names"], jsonObj["cols"]);
+        emptyPlayersTable();
+        drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["names"], jsonObj["cols"]);   
     }
 }
 

@@ -164,6 +164,22 @@ body {
     99% {transform: scale(.8);}
 }
 
+#playersMissing {
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: aliceblue;
+}
+
+#players td {
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.cellID {
+    color: aliceblue;
+}
     /*-----------------------ENDING------------------------*/
 
 #ending {
