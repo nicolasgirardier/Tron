@@ -247,6 +247,11 @@ class Game {
         this.hasFinished = false;
 
         /**
+         * La game a besoin d'être mise à jour.
+         */
+        this.requestUpdate = true;
+
+        /**
          * Indique si la Game doit être retirée de la liste des Game en cours.
          */
         this.toRemove = false;
@@ -375,6 +380,8 @@ class Game {
                 jsonToSend["names"] = names;
                 jsonToSend["cols"] = cols;
                 jsonToSend["scores"] = scores;
+                this.sendUpdateToClients(jsonToSend);
+                this.requestUpdate = false;
             }
                 
         } else {
@@ -536,13 +543,12 @@ function updateGames() {
     gamesPlaying.forEach((game, index) => {
         if (game.toRemove)
             gamesPlaying.splice(index, 1);
-        else
+        else if (game.requestUpdate)
             game.update();
     })
 }
 
-setInterval(updateGames, 100);
-
+setInterval(updateGames, 200);
 
 ///////////////////// LE SERVEUR ////////////////////////////
 const http = require('http');
