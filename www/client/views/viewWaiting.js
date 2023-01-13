@@ -10,7 +10,7 @@ function drawWaitingRoom(players, requestedNbPlayers, names, cols) {
         let row = document.createElement("tr");
         let cellID = document.createElement("td");
         let cellCol = document.createElement("td");
-        let idPlayer = document.createTextNode(""+names[i]);
+        let idPlayer = document.createTextNode(names[i]+"'s");
         let colPlayer = document.createTextNode("color");
         cellID.setAttribute("class", "cellID");
         cellID.appendChild(idPlayer);
