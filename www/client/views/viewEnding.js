@@ -21,4 +21,11 @@ function drawEndingRoom(names, cols, scores) {
 
     // }
 }
+
+function emptyScoreBoard() {
+    while (table.lastElementChild)
+        table.removeChild(table.lastElementChild);
+}
+
+
 ////////////////////////////////////////////////////

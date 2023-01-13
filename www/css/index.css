@@ -116,14 +116,15 @@ body {
     color:rgb(7, 7, 79);
 }
 
-#authentifactionButton {
+.bouton {
     padding: 8px;
     font-family: 'Bahnschrift';
     font-weight: bold;
     font-size: 20px;
     color: white;
     background-color: rgb(7, 7, 79);
-    cursor: pointer;}
+    cursor: pointer;
+}
 
 
     /*-----------------------WAITING------------------------*/
