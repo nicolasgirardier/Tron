@@ -165,6 +165,12 @@ body {
 }
 
     /*-----------------------ENDING------------------------*/
+
+#endind {
+    display: flex;
+    flex-direction: column;
+}
+
 #content {
     display: flex;
     flex-direction: column;
@@ -194,9 +200,6 @@ body {
 tbody {
     border-spacing: 17px;
 }
-
-
-
 
 
 #loginConnected {

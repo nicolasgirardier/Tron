@@ -12,6 +12,7 @@ class Model {
         this.endingView = false;
 
         this.gridDrawn = false;
+        this.scoreBoardCreated = false;
     }
 
     setIdPlayer(idPlayer) {
@@ -28,6 +29,12 @@ class Model {
     drawGridOnce() {
         let res = this.gridDrawn;
         this.gridDrawn = true;
+        return res;
+    }
+
+    createScoreBoardOnce() {
+        let res = this.scoreBoardCreated;
+        this.scoreBoardCreated = true;
         return res;
     }
 }

@@ -67,7 +67,11 @@ function getJsonFromServer(jsonObj) {
         }
     } else if (jsonObj["hasFinished"]) {
         model.show("ENDING");
-        drawEndingRoom(jsonObj["names"], jsonObj["cols"], jsonObj["scores"]);
+        if(!model.createScoreBoardOnce()) {
+            console.log("Je crée la table pour la première fois");
+            emptyScoreBoard();
+            drawEndingRoom(jsonObj["names"], jsonObj["cols"], jsonObj["scores"]);
+        }
     } else {
         model.show("WAITING");
         drawWaitingRoom(jsonObj["players"], jsonObj["requestedNbPlayers"], jsonObj["names"], jsonObj["cols"]);

@@ -24,6 +24,8 @@ function drawEndingRoom(names, cols, scores) {
 }
 
 function emptyScoreBoard() {
+    var table = document.getElementById("scoreBoard");
+
     while (table.lastElementChild)
         table.removeChild(table.lastElementChild);
 }
