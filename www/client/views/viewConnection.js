@@ -1,7 +1,7 @@
 /////////////////CONNECTION////VIEW/////////////////
 function drawConnectionPage() {
     showView("CONNECTION");
-
+    console.log("AFFICHE LA VUE CONNEXION");
     
 }
 ////////////////////////////////////////////////////
