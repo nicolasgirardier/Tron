@@ -166,7 +166,7 @@ body {
 
     /*-----------------------ENDING------------------------*/
 
-#endind {
+#ending {
     display: flex;
     flex-direction: column;
 }
@@ -190,6 +190,7 @@ body {
 #scoreBoard {
     display: flex;
     align-self: center;
+    flex-direction: column;
     width: -moz-fit-content;
     width: fit-content;
     color: white;
@@ -201,6 +202,11 @@ tbody {
     border-spacing: 17px;
 }
 
+#quit {
+    width: fit-content;
+    padding: 10px 35px 10px 35px;
+    align-self: center;
+}
 
 #loginConnected {
     display: none;
