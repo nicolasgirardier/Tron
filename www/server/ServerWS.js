@@ -15,7 +15,7 @@ class Config {
     /**
      * Nombre de joueurs requis.
      */
-    static NB_REQUIRED_PLAYERS = 4;
+    static NB_REQUIRED_PLAYERS = 3;
 
     /**
      * Coordonnées de départ d'un joueur.
@@ -110,7 +110,7 @@ class Cell {
      * @param {Integer} y Coordonnée y de la Cell.
      * @param {String} col La couleur de la moto présente sur cette Cell.
      */
-    constructor(x, y, col = null) {
+    constructor(x, y, col = "rgba(255, 255, 255, 0)") {
         this.x = x;
         this.y = y;
         this.col = col;
@@ -121,7 +121,7 @@ class Cell {
      * @returns true si la Cell a une couleur, false sinon.
      */
     hasColor() {
-        return this.col != null;
+        return this.col != "rgba(255, 255, 255, 0)";
     }
 
     /**
@@ -136,7 +136,7 @@ class Cell {
      * Redéfinit cette Cell comme n'ayant pas de couleur.
      */
     resetColor() {
-        this.col = null;
+        this.col = "rgba(255, 255, 255, 0)";
     }
 }
 /**
@@ -251,6 +251,9 @@ class Game {
          */
         this.requestUpdate = true;
 
+        this.nbUpdate = 0;
+        this.nbUpdateBeforeGo = 20;
+
         /**
          * Indique si la Game doit être retirée de la liste des Game en cours.
          */
@@ -275,9 +278,6 @@ class Game {
 
         let newMoto = new Moto(player, this.getCellStart(), this.getRandomColor());
         this.motos.push(newMoto);
-
-        if (this.nbPlayers == this.requestedNbPlayers)
-            this.hasStarted = true;
     }
 
     /**
@@ -324,6 +324,14 @@ class Game {
      * Met à jour l'état du jeu.
      */
     update() {
+        if (this.nbPlayers == this.requestedNbPlayers) {
+            if (this.nbUpdate == this.nbUpdateBeforeGo) {
+                this.hasStarted = true;
+            } else {
+                this.nbUpdate++;
+            }
+        }
+            
         /**
          * jsonToSend est l'objet JSON à envoyer aux clients. Qqsoit l'état du jeu, il est
          * toujours composé de ces deux booléens qui indiquent l'état actuel du jeu. Ils
@@ -350,7 +358,7 @@ class Game {
                      * déjà à une moto (que ce soit sa propre propriétaire ou non), alors la
                      * moto a perdu.
                      */
-                    if (newCell == null || (newCell != null && newCell.col != null)) {
+                    if (newCell == null || (newCell != null && newCell.hasColor())) {
                         this.removeMotoFromGrid(moto, newCell);
                     } else {
                         moto.move(newCell);

@@ -2,7 +2,7 @@
 function drawWaitingRoom(players, requestedNbPlayers, names, cols) {
     showView("WAITING");
     let pm = document.getElementById("playersMissing");
-    pm.innerHTML= "players missing : "+ (requestedNbPlayers - players);
+    pm.innerHTML = requestedNbPlayers - players == 0 ? "The game is about to start !!!!" : "players missing : "+ (requestedNbPlayers - players);
     let table = document.getElementById("players");
     
 
