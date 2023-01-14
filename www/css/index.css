@@ -11,7 +11,6 @@ body {
     font-family: fantasy;
     font-style: italic;
     margin: 10px;
-    overflow:visible;
     animation: 1s linear 0s infinite alternate zoom;
 }
 

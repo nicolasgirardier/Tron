@@ -384,7 +384,7 @@ class Game {
                 this.requestUpdate = false;
                 return;
             }
-                
+
         } else {
             /**
              * Tant que la game est en attente, on envoie avec le JSON des données comme le nombre
@@ -392,14 +392,14 @@ class Game {
              * déjà connectés et leur couleur.
              */
             let names = [], cols = [];
-                this.motos.forEach(m => {
-                    names.push(m.name);
-                    cols.push(m.color);
-                })
-                jsonToSend["players"] = this.nbPlayers;
-                jsonToSend["requestedNbPlayers"] = this.requestedNbPlayers;
-                jsonToSend["names"] = names;
-                jsonToSend["cols"] = cols;
+            this.motos.forEach(m => {
+                names.push(m.name);
+                cols.push(m.color);
+            })
+            jsonToSend["players"] = this.nbPlayers;
+            jsonToSend["requestedNbPlayers"] = this.requestedNbPlayers;
+            jsonToSend["names"] = names;
+            jsonToSend["cols"] = cols;
         }
 
         /**
@@ -610,7 +610,7 @@ wsServer.on('request', function (request) {
             if (json.status == "sendControl") {
                 let key = json.object.key;
                 game.getControlFromClient(moto, key);
-            } 
+            }
             else if (json.status == "disconnects") {
                 game.playerDisconnects(moto.player);
                 removeConnection(connection);
@@ -619,15 +619,17 @@ wsServer.on('request', function (request) {
 
 
     });
-    
-    connection.on('close', function (reasonCode, description) {
-        let gamemoto = getGameMoto(connection.id);
-        let game = gamemoto[0];
-        let moto = gamemoto[1];
-        game.playerDisconnects(moto.player);
 
-        removeConnection(connection);
-        console.log((new Date()) + ' Peer ' + connection.id + ' disconnected.')
+    connection.on('close', function (reasonCode, description) {
+        if (connection.id != undefined) {
+            let gamemoto = getGameMoto(connection.id);
+            let game = gamemoto[0];
+            let moto = gamemoto[1];
+            game.playerDisconnects(moto.player);
+
+            removeConnection(connection);
+            console.log((new Date()) + ' Peer ' + connection.id + ' disconnected.')
+        }
     });
 });
 
@@ -655,7 +657,9 @@ function getGameMoto(id) {
         game = gamesPlaying[i];
         moto = game.motos.find(m => { return m.player != null ? m.player.id == id : false });
         if (moto != undefined)
-            break;
+            return [game, moto];
     }
-    return [game, moto];
+    moto = gameWaiting.motos.find(m => { return m.player != null ? m.player.id == id : false });
+    if (moto != undefined)
+        return [gameWaiting, moto];
 }
