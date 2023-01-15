@@ -325,7 +325,7 @@ class Game {
      */
     update() {
         if (this.nbPlayers == this.requestedNbPlayers) {
-            if (this.nbUpdate == this.nbUpdateBeforeGo) {
+            if (this.nbUpdate == this.nbUpdateBeforeGo && !this.hasStarted) {
                 this.hasStarted = true;
             } else {
                 this.nbUpdate++;
