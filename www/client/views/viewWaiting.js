@@ -23,7 +23,6 @@ function drawWaitingRoom(players, requestedNbPlayers, names, cols) {
 }
 
 function emptyPlayersTable() {
-    console.log("supprimer tout");
     let table = document.getElementById("players");
     while (table.lastElementChild)
         table.removeChild(table.lastElementChild);

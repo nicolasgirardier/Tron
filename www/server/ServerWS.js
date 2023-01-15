@@ -253,6 +253,7 @@ class Game {
 
         this.nbUpdate = 0;
         this.nbUpdateBeforeGo = 20;
+        this.requestWaiter = false;
 
         /**
          * Indique si la Game doit être retirée de la liste des Game en cours.
@@ -278,6 +279,9 @@ class Game {
 
         let newMoto = new Moto(player, this.getCellStart(), this.getRandomColor());
         this.motos.push(newMoto);
+
+        if (this.nbPlayers == this.requestedNbPlayers)
+            this.requestWaiter = true;
     }
 
     /**
@@ -324,14 +328,7 @@ class Game {
      * Met à jour l'état du jeu.
      */
     update() {
-        if (this.nbPlayers == this.requestedNbPlayers) {
-            if (this.nbUpdate == this.nbUpdateBeforeGo && !this.hasStarted) {
-                this.hasStarted = true;
-            } else {
-                this.nbUpdate++;
-            }
-        }
-            
+
         /**
          * jsonToSend est l'objet JSON à envoyer aux clients. Qqsoit l'état du jeu, il est
          * toujours composé de ces deux booléens qui indiquent l'état actuel du jeu. Ils
@@ -392,7 +389,6 @@ class Game {
                 this.requestUpdate = false;
                 return;
             }
-
         } else {
             /**
              * Tant que la game est en attente, on envoie avec le JSON des données comme le nombre
@@ -408,6 +404,13 @@ class Game {
             jsonToSend["requestedNbPlayers"] = this.requestedNbPlayers;
             jsonToSend["names"] = names;
             jsonToSend["cols"] = cols;
+
+            if (this.requestWaiter) {
+                this.nbUpdate++;
+                if (this.nbUpdate == this.nbUpdateBeforeGo) {
+                    this.hasStarted = true;
+                }
+            }
         }
 
         /**
@@ -527,7 +530,7 @@ function joueurConnecte(idPlayer, con) {
          * la liste des games en cours (gamesPlaying). Et gameWaiting redevient
          * null.
          */
-        if (gameWaiting.hasStarted) {
+        if (gameWaiting.requestWaiter) {
             gamesPlaying.push(gameWaiting);
             gameWaiting = null;
         }
